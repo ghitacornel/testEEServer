@@ -1,0 +1,11 @@
+version: '3.6'
+
+services:
+
+  jboss_service:
+    build:
+      context: . # use current Dockerfile as image build context
+    ports:
+      - 8080:8080 # control web server exposed port
+    image: jboss_deployment # name of the image to be created, use versioning
+    container_name: jboss_container # custom container name used only for development purpose

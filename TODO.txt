@@ -1,0 +1,6 @@
+http://localhost:8080/moduleREST/rest/person
+
+mvn clean install -DskipTests
+
+docker rmi jboss_deployment
+docker-compose up
