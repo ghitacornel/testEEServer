@@ -15,15 +15,27 @@
     <dependencies>
         <dependency>
             <groupId>org.example</groupId>
-            <artifactId>moduleREST</artifactId>
+            <artifactId>moduleJpaGeneric</artifactId>
             <version>${project.version}</version>
-            <type>war</type>
+            <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>moduleJPA</artifactId>
+            <version>${project.version}</version>
+            <type>ejb</type>
         </dependency>
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>moduleEJB</artifactId>
             <version>${project.version}</version>
             <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>moduleREST</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
         </dependency>
     </dependencies>
 

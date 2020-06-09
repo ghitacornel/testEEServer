@@ -2,44 +2,115 @@ package controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import model.PersonJson;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestPersonController extends AbstractTest {
 
     @Test
-    public void testFindAll() throws Exception {
-
-        List<PersonJson> expected = new ArrayList<>();
-        {
-            PersonJson personJson = new PersonJson();
-            personJson.setId(1);
-            personJson.setName("ion");
-            expected.add(personJson);
-        }
-        {
-            PersonJson personJson = new PersonJson();
-            personJson.setId(2);
-            personJson.setName("gheorghe");
-            expected.add(personJson);
-        }
-
-        RestAssured.get(URL + "/moduleREST/rest/person").then().statusCode(200).assertThat()
-                .body(Matchers.equalTo(new ObjectMapper().writeValueAsString(expected)));
+    public void testFindAll() {
+        RestAssured.given()
+                .get(URL + "/moduleREST/rest/person")
+                .then()
+                .statusCode(200)
+                .assertThat().body(Matchers.equalTo("[]"));
     }
 
     @Test
-    public void testFindById() throws Exception {
+    public void testCRUD() throws Exception {
 
-        PersonJson expected = new PersonJson();
-        expected.setId(1);
-        expected.setName("ion");
+        PersonJson personJson = new PersonJson();
 
-        RestAssured.get(URL + "/moduleREST/rest/person/1").then().statusCode(200).assertThat()
-                .body(Matchers.equalTo(new ObjectMapper().writeValueAsString(expected)));
+        // CREATE
+        {
+            personJson.setId(null);
+            personJson.setName("alex");
+
+            Response response = RestAssured.given()
+                    .contentType(ContentType.JSON)
+                    .body(new ObjectMapper().writeValueAsString(personJson))
+                    .post("/moduleREST/rest/person")
+                    .then()
+                    .statusCode(200)
+                    .extract()
+                    .response();
+
+            String responseContent = response.getBody().asString();
+            Assert.assertNotNull(responseContent);
+            personJson.setId(Integer.valueOf(responseContent));
+        }
+
+        // FIND BY ID
+        {
+            RestAssured.given()
+                    .get("/moduleREST/rest/person/" + personJson.getId())
+                    .then()
+                    .statusCode(200)
+                    .assertThat().body(Matchers.equalTo(new ObjectMapper().writeValueAsString(personJson)));
+        }
+
+        // REWRITE
+        {
+            personJson.setName("marin");
+            RestAssured.given()
+                    .contentType(ContentType.JSON)
+                    .body(new ObjectMapper().writeValueAsString(personJson))
+                    .put("/moduleREST/rest/person")
+                    .then()
+                    .statusCode(204)
+                    .assertThat().body(Matchers.emptyString());
+        }
+
+        // FIND BY ID
+        {
+            RestAssured.given()
+                    .get("/moduleREST/rest/person/" + personJson.getId())
+                    .then()
+                    .statusCode(200)
+                    .assertThat().body(Matchers.equalTo(new ObjectMapper().writeValueAsString(personJson)));
+        }
+
+        // UPDATE
+        {
+            personJson.setName("vasile");
+            RestAssured.given()
+                    .contentType(ContentType.JSON)
+                    .body(new ObjectMapper().writeValueAsString(personJson))
+                    .patch("/moduleREST/rest/person")
+                    .then()
+                    .statusCode(204)
+                    .assertThat().body(Matchers.emptyString());
+        }
+
+        // FIND BY ID
+        {
+            RestAssured.given()
+                    .get("/moduleREST/rest/person/" + personJson.getId())
+                    .then()
+                    .statusCode(200)
+                    .assertThat().body(Matchers.equalTo(new ObjectMapper().writeValueAsString(personJson)));
+        }
+
+        // DELETE
+        {
+            RestAssured.given()
+                    .delete("/moduleREST/rest/person/" + personJson.getId())
+                    .then()
+                    .statusCode(204)
+                    .assertThat().body(Matchers.emptyString());
+        }
+
+        // FIND BY ID
+        {
+            RestAssured.given()
+                    .get("/moduleREST/rest/person/" + personJson.getId())
+                    .then()
+                    .statusCode(204)
+                    .assertThat().body(Matchers.emptyString());
+        }
     }
 }

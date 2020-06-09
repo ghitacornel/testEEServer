@@ -2,6 +2,18 @@ version: '3.6'
 
 services:
 
+  # database service and server service must be in the same network
+  # do not expose database port out of the network
+  postgres_service:
+    image: postgres:latest
+    container_name: local_postgres
+    environment:
+      - POSTGRES_USER=cornel
+      - POSTGRES_PASSWORD=sefusefu
+      - POSTGRES_DB=mydatabase
+    networks:
+      - testEEServerNetwork
+
   jboss_service:
     build:
       context: . # use current Dockerfile as image build context
@@ -9,3 +21,9 @@ services:
       - 8080:8080 # control web server exposed port
     image: jboss_deployment # name of the image to be created, use versioning
     container_name: jboss_container # custom container name used only for development purpose
+    networks:
+      - testEEServerNetwork
+
+networks:
+  testEEServerNetwork:
+    driver: bridge

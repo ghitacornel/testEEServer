@@ -9,6 +9,8 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
+        <module>moduleJpaGeneric</module>
+        <module>moduleJPA</module>
         <module>moduleEJB</module>
         <module>moduleREST</module>
         <module>moduleEAR</module>

@@ -8,10 +8,8 @@ import service.PersonService;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Stateless
@@ -26,7 +24,7 @@ public class PersonController {
     final private PersonMapper mapper = new PersonMapper();
 
     @GET
-    @Produces("text/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public List<PersonJson> findAll() {
         logger.info("find all called");
         return mapper.convertToJson(personService.findAll());
@@ -34,9 +32,34 @@ public class PersonController {
 
     @GET
     @Path("/{id}")
-    @Produces("text/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public PersonJson findById(@PathParam("id") Integer id) {
         return mapper.convertToJson(personService.findById(id));
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Integer post(PersonJson json) {
+        return personService.save(mapper.convertToModel(json));
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void put(PersonJson json) {
+        personService.replace(mapper.convertToModel(json));
+    }
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void update(PersonJson json) {
+        personService.update(mapper.convertToModel(json));
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public void deleteById(@PathParam("id") Integer id) {
+        personService.deleteById(id);
     }
 
 }
