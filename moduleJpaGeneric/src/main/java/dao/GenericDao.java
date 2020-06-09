@@ -13,42 +13,45 @@ import java.util.List;
  */
 public interface GenericDao<Entity, ID extends Serializable> {
 
-	void persist(Entity entity);
+    void persist(Entity entity);
 
-	void merge(Entity entity);
+    void merge(Entity entity);
 
-	void remove(Entity entity);
+    void remove(Entity entity);
 
-	/**
-	 * sometimes we want to perform operations on entities that must not affect
-	 * their database state<br>
-	 * those entities must be detached first
-	 *
-	 * @param entity
-	 */
-	void detach(Entity entity);
+    /**
+     * sometimes we want to perform operations on entities that must not affect
+     * their database state<br>
+     * those entities must be detached first
+     *
+     * @param entity
+     */
+    void detach(Entity entity);
 
-	/**
-	 * sometimes we want to cancel all changes made on an entity
-	 *
-	 * @param entity
-	 */
-	void refresh(Entity entity);
+    /**
+     * sometimes we want to cancel all changes made on an entity
+     *
+     * @param entity
+     */
+    void refresh(Entity entity);
 
-	/**
-	 * sometimes we might use stored procedures that create/alter existing
-	 * entities
-	 */
-	void flush();
+    /**
+     * sometimes we might use stored procedures that create/alter existing
+     * entities
+     */
+    void flush();
 
-	List<Entity> findAll();
+    List<Entity> findAll();
 
-	Entity findById(ID id);
+    Entity findById(ID id);
 
-	List<Entity> findByIds(Collection<ID> ids);
+    List<Entity> findByIds(Collection<ID> ids);
 
 	Entity getById(ID id);
 
-	void removeById(ID id);
+    default void removeById(ID id) {
+        Entity entity = findById(id);
+        if (entity != null) remove(entity);
+    }
 
 }

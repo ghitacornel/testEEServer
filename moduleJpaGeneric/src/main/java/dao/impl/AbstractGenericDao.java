@@ -59,14 +59,6 @@ public abstract class AbstractGenericDao<Entity, ID extends Serializable> implem
     }
 
     @Override
-    public void removeById(ID id) {
-        Entity entity = findById(id);
-        if (entity != null) {
-            getEntityManager().remove(entity);
-        }
-    }
-
-    @Override
     public List<Entity> findAll() {
         return getEntityManager().createQuery("select t from " + getEntityName() + " t", type).getResultList();
     }
@@ -79,20 +71,14 @@ public abstract class AbstractGenericDao<Entity, ID extends Serializable> implem
     @Override
     public Entity getById(ID id) {
         Entity entity = getEntityManager().find(type, id);
-        if (entity == null) {
-            throw new DAOEntityNotFoundException(type.getCanonicalName(), id);
-        }
+        if (entity == null) throw new DAOEntityNotFoundException(type.getCanonicalName(), id);
         return entity;
     }
 
     @Override
     public List<Entity> findByIds(Collection<ID> ids) {
-        if (ids == null) {
-            return new ArrayList<>();
-        }
-        if (ids.isEmpty()) {
-            return new ArrayList<>();
-        }
+        if (ids == null) return new ArrayList<>();
+        if (ids.isEmpty()) return new ArrayList<>();
         return getEntityManager().createQuery("select t from " + getEntityName() + " t where t.id in :ids", type)
                 .setParameter("ids", ids)
                 .getResultList();
