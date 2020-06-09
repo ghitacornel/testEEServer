@@ -109,8 +109,8 @@ public class TestPersonController extends AbstractTest {
             RestAssured.given()
                     .get("/moduleREST/rest/person/" + personJson.getId())
                     .then()
-                    .statusCode(204)
-                    .assertThat().body(Matchers.emptyString());
+                    .statusCode(404)
+                    .assertThat().body(Matchers.equalTo("No instance of type entities.Person found for id " + personJson.getId()));
         }
     }
 }

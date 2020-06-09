@@ -164,6 +164,7 @@
                         <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
                     </driver>
                 </drivers>
+                <!-- CUSTOM PART BELOW -->
                 <drivers>
                     <driver name="postgresql" module="org.postgresql">
                         <!-- for xa datasource -->
@@ -180,6 +181,7 @@
                         <password>sefusefu</password>
                     </security>
                 </datasource>
+                <!-- CUSTOM PART ABOVE -->
             </datasources>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:deployment-scanner:2.0">

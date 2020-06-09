@@ -1,12 +1,11 @@
 package service;
 
-import dao.exceptions.DAOEntityNotFoundException;
 import entities.Person;
+import exceptions.BusinessException;
 import repositories.PersonRepository;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Stateless
@@ -19,9 +18,8 @@ public class PersonService {
         return personRepository.findAll();
     }
 
-    public Person findById(Integer id) {
-
-        return personRepository.findById(id);
+    public Person getById(Integer id) {
+        return personRepository.getById(id);
     }
 
     public Integer save(Person person) {
@@ -35,7 +33,7 @@ public class PersonService {
 
     public void replace(Person person) {
         if (person.getId() == null) {
-            throw new DAOEntityNotFoundException("Person");
+            throw new BusinessException("Person with null id provided");
         } else if (personRepository.findById(person.getId()) == null) {
             personRepository.persist(person);
         } else {
@@ -45,7 +43,7 @@ public class PersonService {
 
     public void update(Person person) {
         if (personRepository.findById(person.getId()) == null) {
-            throw new DAOEntityNotFoundException("Person", person.getId());
+            throw new BusinessException("Person with provided id " + person.getId() + " not found");
         }
         personRepository.merge(person);
     }

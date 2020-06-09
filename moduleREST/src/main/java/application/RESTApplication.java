@@ -1,6 +1,7 @@
 package application;
 
 import controllers.PersonController;
+import exceptions.ExceptionMapper;
 import filters.AfterMatchRequestFilter;
 import filters.PreMatchRequestFilter;
 import filters.ResponseServerFilter;
@@ -27,6 +28,8 @@ public class RESTApplication extends Application {
         singletons.add(new ResponseServerFilter());
         singletons.add(new RequestClientWriterInterceptor());
         singletons.add(new RequestServerReaderInterceptor());
+
+        singletons.add(new ExceptionMapper());
 
     }
 

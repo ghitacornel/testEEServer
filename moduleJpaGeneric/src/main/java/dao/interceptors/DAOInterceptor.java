@@ -31,7 +31,7 @@ public class DAOInterceptor {
         for (int i = 0; i < context.getParameters().length; i++) {
             try {
                 Object object = context.getParameters()[i];
-                builder.append(String.valueOf(object));
+                builder.append(object);
             } catch (Exception e) {
                 builder.append("N/A");
             }
