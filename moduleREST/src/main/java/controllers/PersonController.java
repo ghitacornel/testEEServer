@@ -2,6 +2,8 @@ package controllers;
 
 import mappers.PersonMapper;
 import model.PersonJson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import service.PersonService;
 
 import javax.ejb.EJB;
@@ -16,6 +18,8 @@ import java.util.List;
 @Path("/person")
 public class PersonController {
 
+    private static final Logger logger = LoggerFactory.getLogger(PersonController.class);
+
     @EJB
     PersonService personService;
 
@@ -24,6 +28,7 @@ public class PersonController {
     @GET
     @Produces("text/json")
     public List<PersonJson> findAll() {
+        logger.info("find all called");
         return mapper.convertToJson(personService.findAll());
     }
 
