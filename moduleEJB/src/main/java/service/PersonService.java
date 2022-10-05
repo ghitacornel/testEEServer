@@ -34,7 +34,8 @@ public class PersonService {
     public void replace(Person person) {
         if (person.getId() == null) {
             throw new BusinessException("Person with null id provided");
-        } else if (personRepository.findById(person.getId()) == null) {
+        }
+        if (personRepository.findById(person.getId()) == null) {
             personRepository.persist(person);
         } else {
             personRepository.merge(person);
